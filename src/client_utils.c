@@ -57,3 +57,56 @@ int connect_to_port(const char *host, int port)
     // Returns the open socket descriptor to the caller
     return sockfd;
 }
+
+// Add socket to the set
+void add_socket_to_fd_set(const int socket_descriptor, 
+    int *maxfd, 
+    fd_set *readfds)
+{
+    // Adds each socket to the set
+    FD_SET(socket_descriptor, readfds);
+
+    // Check if max socket descriptor should be
+    // updated
+    if (socket_descriptor > *maxfd)
+    {
+        // Update max socket descriptor value
+        *maxfd = socket_descriptor;
+    }
+}
+
+// Read latest values if available
+void read_lastest_value(const int socket_descriptor, 
+    const fd_set *readfds,
+    char *buffer)
+{
+    // Read latest values if available
+    if (FD_ISSET(socket_descriptor, readfds)) 
+    {
+        // Temporal
+        char tmp[128];
+
+        int n = read(socket_descriptor, tmp, sizeof(tmp) - 1);
+
+        if (n > 0) 
+        {
+            // terminator
+            tmp[n] = '\0';
+            
+            // store latest
+            strcpy(buffer, strtok(tmp, "\n")); 
+        }
+    }
+}
+// Get current timestamp in milliseconds since Unix epoch
+long long current_time_ms() 
+{
+    // Store absolute system time
+    struct timeval tv;
+
+    // Get the current system time
+    gettimeofday(&tv, NULL);
+
+    // Return milliseconds since the Unix epoch.
+    return (long long)(tv.tv_sec) * SEC_TO_MILISEC + (tv.tv_usec / SEC_TO_MILISEC);
+}
