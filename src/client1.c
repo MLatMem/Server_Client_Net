@@ -44,6 +44,12 @@ int main(void)
         // (Wait up to 100ms for data)
         // ------- Dump it into a JSON
     }*/
+    
+    // ------- Close connections
+    for (int i = 0; i < N_PORTS; i++) 
+    {
+        close(socket_descriptors[i]);
+    }
 
     // Return 0
     return 0;
