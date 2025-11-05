@@ -1,0 +1,32 @@
+# Server_Client_Net software user manual
+## Docker 
+
+// Build fsw-linux-homework
+docker build -t fsw-linux-homework .
+
+// Run fsw-linux-homework container
+docker run -d --name fsw-server --network fsw-net -p 4000:4000/udp -p 4001:4001 -p 4002:4002 -p 4003:4003 fsw-linux-homework
+
+// Build fsw-client-dev
+docker build -t fsw-client-dev .
+
+// Run fsw-client-dev (interactive, it should open a terminal)
+docker run -it --rm --name fsw-client --network fsw-net -v "C:\Users\marta\OneDrive\Escritorio\ICEYE\Assigment\Server_Client_Net\src:/work" fsw-client-dev
+
+// The workspace should show: 
+root@6567a43d8110:/workspace# ls -l
+total 36
+-rwxr-xr-x 1 root root   515 Nov  5 18:36 Dockerfile
+-rwxr-xr-x 1 root root 18431 Nov  3 22:37 LICENSE
+-rwxr-xr-x 1 root root  1018 Nov  3 22:54 README.md
+drwxr-xr-x 3 root root  4096 Nov  5 18:36 src
+drwxr-xr-x 2 root root  4096 Nov  4 22:16 test_tools
+
+// Change to source folder
+cd src
+
+// Build the source code
+make
+
+// Execute client1
+./client1
