@@ -1,5 +1,8 @@
 # Server_Client_Net software user manual
-## Docker 
+## Create environment with Docker 
+
+// Create a network for the containers
+docker network create fsw-net
 
 // Build fsw-linux-homework
 docker build -t fsw-linux-homework .
@@ -11,7 +14,7 @@ docker run -d --name fsw-server --network fsw-net -p 4000:4000/udp -p 4001:4001 
 docker build -t fsw-client-dev .
 
 // Run fsw-client-dev (interactive, it should open a terminal)
-docker run -it --rm --name fsw-client --network fsw-net -v "C:\Users\marta\OneDrive\Escritorio\ICEYE\Assigment\Server_Client_Net\src:/work" fsw-client-dev
+docker run -it --rm --name fsw-client --network fsw-net -v ".\path\to\repository\Server_Client_Net\src:/work" fsw-client-dev
 
 // The workspace should show: 
 root@6567a43d8110:/workspace# ls -l
@@ -19,14 +22,40 @@ total 36
 -rwxr-xr-x 1 root root   515 Nov  5 18:36 Dockerfile
 -rwxr-xr-x 1 root root 18431 Nov  3 22:37 LICENSE
 -rwxr-xr-x 1 root root  1018 Nov  3 22:54 README.md
+-rwxr-xr-x 1 root root  1014 Nov  5 21:54 SUM
 drwxr-xr-x 3 root root  4096 Nov  5 18:36 src
 drwxr-xr-x 2 root root  4096 Nov  4 22:16 test_tools
 
+## Build source code
 // Change to source folder
 cd src
 
-// Build the source code
+// Build the source code (should build client1 and client2)
 make
+// make client1 and make client2 should build them independently
 
 // Execute client1
-./client1
+./client1 > data_client1.json
+
+// Execute client2
+./client2 > data_client2.json
+
+## Plot analysis
+// Copy outputs from data_client1.json and data_client2.json to test_tools folder
+cp src/data_client*.json test_tools
+
+// Ensure that the data is clean, remove lines which are not complete in case the execution was interupted (usually last line)
+
+// Go to test_tools folder
+cd test_tools
+
+// Build fsw-client-test-tool
+docker build -t fsw-client-test-tool .
+
+// Enter into the testing environment
+docker run -it --rm --name fws-testing  fsw-client-test-tool /bin/bash
+
+// Execute the python script
+python main.py
+
+// Check the outputs_plot*.jpg
