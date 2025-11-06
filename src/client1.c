@@ -12,7 +12,7 @@ int main(void)
     for (int i = 0; i < N_PORTS; i++) 
     {
         // Connect to port i
-        socket_descriptors[i] = connect_to_port(SERVER, PORT[i]);
+        socket_descriptors[i] = connect_to_port(SERVER, PORT[i], SOCK_STREAM);
 
         // Check conection failures
         if (socket_descriptors[i] < 0) 
