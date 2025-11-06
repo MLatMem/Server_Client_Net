@@ -28,4 +28,14 @@ Understand the problem and think about the development environment and how to st
 
 * Develop client_utils.h/c, it should contain all the functions
 
+* Client 1:
+    - Output 1 shows a sinoidal signal
+    - Output 2 shows a triangular signal
+    - Output 3 shows a square signal
+
+![Output plot for client1](outputs_plot_client1.jpg)
+
+* Develop client2.c, 
+    - Part of client1 has been reused, adding new features required to implement task 2.
+
 
