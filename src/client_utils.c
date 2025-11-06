@@ -1,7 +1,7 @@
 #include "client_utils.h"
 
 // Function to create a TCP connection to the given port
-int connect_to_port(const char *host, int port) 
+int connect_to_port(const char *host, int port, int type) 
 {
     // Socket file descriptor
     int sockfd;
@@ -20,7 +20,7 @@ int connect_to_port(const char *host, int port)
     }
 
     // Creates a new TCP socket, returns a socket descriptor
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    sockfd = socket(AF_INET, type, 0);
 
     // If the socket descriptor is negative, return an error
     if (sockfd < 0) 
@@ -109,4 +109,38 @@ long long current_time_ms()
 
     // Return milliseconds since the Unix epoch.
     return (long long)(tv.tv_sec) * SEC_TO_MILISEC + (tv.tv_usec / SEC_TO_MILISEC);
+}
+
+// Send UDP binary control message
+void send_control_message(int sockfd, 
+    uint16_t operation,
+    uint16_t object, 
+    uint16_t property, 
+    uint16_t value) 
+{
+    // Message content
+    uint16_t msg[4];
+
+    // Select operation
+    int fields = (operation == 1) ? 3 : 4;
+
+    // Read fields
+    msg[0] = htons(operation);
+    msg[1] = htons(object);
+    msg[2] = htons(property);
+
+    // Select value
+    if (operation == 2)
+    {
+        msg[3] = htons(value);
+    } 
+    
+    // Send message
+    ssize_t len = send(sockfd, msg, fields * sizeof(uint16_t), 0);
+
+    // Check if error
+    if (len < 0) 
+    {
+        perror("send");
+    }
 }

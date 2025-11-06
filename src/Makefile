@@ -1,22 +1,20 @@
-# Makefile for client1
+# Makefile for client1 and client2
 
 # Compiler and flags
 CC = gcc
 CFLAGS = -Wall -Wextra -O2
 
-# Target executable
-TARGET = client1
-
-# Source files
-SRCS = client1.c client_utils.c
-
 # Default rule
-all: $(TARGET)
+all: client1 client2
 
-# How to build client1
-$(TARGET): $(SRCS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS)
+# Build client1
+client1: client1.c client_utils.c
+	$(CC) $(CFLAGS) -o client1 client1.c client_utils.c
 
-# Clean up generated files
+# Build client2
+client2: client2.c client_utils.c
+	$(CC) $(CFLAGS) -o client2 client2.c client_utils.c
+
+# Clean up
 clean:
-	rm -f $(TARGET)
+	rm -f client1 client2 *.o

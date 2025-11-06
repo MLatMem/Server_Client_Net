@@ -19,6 +19,22 @@
 #include <sys/time.h>
 #include <time.h>
 
+// Number of ports
+#define N_PORTS 3
+
+//  Buffer size
+#define BUFFER_SIZE 64
+
+// Docker service name
+// TODO: Provide the server name as input
+static const char SERVER[18] = "fsw-server";
+
+// Ports
+static const int PORT[N_PORTS] = {4001, 4002, 4003};
+
+// UDP Ports
+static const int UDP_PORT = 4000;
+
 /// Const to pass from seconds to nanoseconds
 static const int SEC_TO_MILISEC = 1000;
 
@@ -45,7 +61,21 @@ void read_lastest_value(const int socket_descriptor,
 /// Function to create a TCP connection to the given port
 /// @param host                     - Host name
 /// @param port                     - Port number
+/// @param type                     - Port type 
+///                         (TCP SOCK_STREAM, UDP SOCK_DGRAM)
 /// @return int                     - Socket file descriptor
-int connect_to_port(const char *host, int port);
+int connect_to_port(const char *host, int port, int type);
+
+/// Send UDP binary control message
+/// @param sockfd                   - Host name
+/// @param operation                - Operation
+/// @param object                   - Object
+/// @param property                 - Property
+/// @param value                    - Value
+void send_control_message(int sockfd, 
+    uint16_t operation,
+    uint16_t object, 
+    uint16_t property, 
+    uint16_t value);
 
 #endif //CLIENT_UTILS_H
